@@ -32,12 +32,12 @@ const SKINS = {
       r: {
         body: ['#fffef8', '#f9edd4', '#efdcb6', '#d9c08e'],
         ring: 'rgba(154, 42, 32, 0.55)', ring2: 'rgba(154, 42, 32, 0.30)',
-        text: '#a82e22', emboss: 'rgba(255, 255, 255, 0.70)', glow: 'rgba(52, 26, 0, 0.45)',
+        text: '#a82e22', emboss: 'rgba(255, 255, 255, 0.70)', glow: 'rgba(52, 26, 0, 0.45)', glossA: 0.7,
       },
       b: {
         body: ['#fffef8', '#f9edd4', '#efdcb6', '#d9c08e'],
         ring: 'rgba(28, 42, 58, 0.55)', ring2: 'rgba(28, 42, 58, 0.28)',
-        text: '#1b2836', emboss: 'rgba(255, 255, 255, 0.70)', glow: 'rgba(52, 26, 0, 0.45)',
+        text: '#1b2836', emboss: 'rgba(255, 255, 255, 0.70)', glow: 'rgba(52, 26, 0, 0.45)', glossA: 0.7,
       },
     },
   },
@@ -63,12 +63,12 @@ const SKINS = {
       r: {
         body: ['#f8ddd3', '#e9ad9e', '#c96b5d', '#9d4a3f'],
         ring: 'rgba(255, 232, 218, 0.55)', ring2: 'rgba(255, 232, 218, 0.26)',
-        text: '#fff6ec', emboss: 'rgba(70, 12, 6, 0.45)', glow: 'rgba(0, 0, 0, 0.55)',
+        text: '#fff6ec', emboss: 'rgba(70, 12, 6, 0.45)', glow: 'rgba(0, 0, 0, 0.55)', glossA: 0.32,
       },
       b: {
         body: ['#9fb2b8', '#77909a', '#425962', '#2a3a42'],
         ring: 'rgba(232, 214, 170, 0.5)', ring2: 'rgba(232, 214, 170, 0.22)',
-        text: '#f4e8ca', emboss: 'rgba(0, 0, 0, 0.40)', glow: 'rgba(0, 0, 0, 0.55)',
+        text: '#f4e8ca', emboss: 'rgba(0, 0, 0, 0.40)', glow: 'rgba(0, 0, 0, 0.55)', glossA: 0.3,
       },
     },
   },
@@ -94,12 +94,12 @@ const SKINS = {
       r: {
         body: ['#ffffff', '#f5faf6', '#e6efe9', '#cfddd5'],
         ring: 'rgba(170, 60, 45, 0.42)', ring2: 'rgba(170, 60, 45, 0.2)',
-        text: '#b03a2b', emboss: 'rgba(255, 255, 255, 0.85)', glow: 'rgba(40, 80, 65, 0.3)',
+        text: '#b03a2b', emboss: 'rgba(255, 255, 255, 0.85)', glow: 'rgba(40, 80, 65, 0.3)', glossA: 0.6,
       },
       b: {
         body: ['#ffffff', '#f5faf6', '#e6efe9', '#cfddd5'],
         ring: 'rgba(58, 96, 82, 0.45)', ring2: 'rgba(58, 96, 82, 0.22)',
-        text: '#274b45', emboss: 'rgba(255, 255, 255, 0.85)', glow: 'rgba(40, 80, 65, 0.3)',
+        text: '#274b45', emboss: 'rgba(255, 255, 255, 0.85)', glow: 'rgba(40, 80, 65, 0.3)', glossA: 0.6,
       },
     },
   },
@@ -980,8 +980,9 @@ function drawPiece(r, c, p) {
     x - rad * 0.3, y - rad * 0.46, rad * 0.02,
     x - rad * 0.3, y - rad * 0.46, rad * 0.92
   );
-  gloss.addColorStop(0, 'rgba(255, 255, 255, 0.7)');
-  gloss.addColorStop(0.55, 'rgba(255, 255, 255, 0.1)');
+  const ga = sk.glossA == null ? 0.62 : sk.glossA;
+  gloss.addColorStop(0, `rgba(255, 255, 255, ${ga})`);
+  gloss.addColorStop(0.55, `rgba(255, 255, 255, ${ga * 0.16})`);
   gloss.addColorStop(1, 'rgba(255, 255, 255, 0)');
   ctx.fillStyle = gloss;
   ctx.beginPath();
