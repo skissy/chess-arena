@@ -285,6 +285,26 @@ body {
 .room-title { display: flex; align-items: center; gap: 10px; flex: 1; }
 .room-title h2 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: 1px; }
 
+.last-move {
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: #f0dcb4;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: rgba(227, 176, 106, 0.12);
+  border: 1px solid rgba(227, 176, 106, 0.28);
+  white-space: nowrap;
+}
+.last-move:empty { display: none; }
+.last-move.pop { animation: chipPop .5s ease; }
+
+@keyframes chipPop {
+  0% { transform: scale(.86); opacity: .3; }
+  60% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 .room-layout {
   display: grid;
   grid-template-columns: 250px minmax(0, 1fr) 330px;
@@ -412,6 +432,32 @@ body {
   color: var(--muted);
 }
 .my-role strong { font-size: 13px; color: var(--text); }
+
+/* 棋谱 */
+.move-log-block { border-top: 1px solid var(--line); padding-top: 14px; }
+.move-log {
+  max-height: 190px;
+  overflow-y: auto;
+  font-size: 12.5px;
+  line-height: 1.95;
+  padding-right: 2px;
+}
+.move-log::-webkit-scrollbar { width: 5px; }
+.move-log::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .12); border-radius: 4px; }
+.move-empty { color: var(--muted); font-size: 12px; }
+.mv-row {
+  display: grid;
+  grid-template-columns: 24px 1fr 1fr;
+  gap: 8px;
+  align-items: baseline;
+  border-radius: 6px;
+  padding: 0 4px;
+}
+.mv-row.last { background: rgba(227, 176, 106, 0.09); }
+.mv-n { color: #55617a; font-size: 11px; text-align: right; font-variant-numeric: tabular-nums; }
+.mv-r, .mv-b { font-family: "Songti SC", "STSong", "SimSun", serif; letter-spacing: .5px; }
+.mv-r { color: #ff9d92; }
+.mv-b { color: #a9c8ff; }
 
 /* 棋盘 */
 .stage { display: flex; justify-content: center; }

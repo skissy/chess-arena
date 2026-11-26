@@ -29,6 +29,9 @@ const S = {
   seq: 0,
   lastChatId: 0,
   lastDanmakuId: 0,
+  histLen: 0,
+  histSeq: 0,
+  histSig: '',
   sel: null,
   busy: false,
   polling: false,
@@ -176,6 +179,9 @@ function enterRoom(roomId) {
   S.joined = false;
   S.lastChatId = 0;
   S.lastDanmakuId = 0;
+  S.histLen = 0;
+  S.histSeq = 0;
+  S.histSig = '';
   S.view = 'room';
 
   if (location.hash !== '#r=' + roomId) location.hash = '#r=' + roomId;
@@ -272,6 +278,7 @@ function applyState(st) {
   renderHint(st);
   renderBanner(st);
   renderButtons(st);
+  renderMoveLog(st);
   appendChat(st.chat || [], firstState);
   updateSpecList(st);
   drawBoard();
@@ -351,6 +358,50 @@ function renderButtons(st) {
   } else {
     rematch.textContent = '重新开始';
   }
+}
+
+function renderMoveLog(st) {
+  const hist = st.history || [];
+  $('moveCount').textContent = st.moveCount;
+  const tail = hist.length ? hist[hist.length - 1] : null;
+  const sig = hist.length + ':' + (tail ? tail.n + tail.text : '');
+  if (sig === S.histSig) return;
+  S.histSig = sig;
+
+  const el = $('moveLog');
+  if (!hist.length) {
+    el.innerHTML = '<div class="move-empty">开局后此处生成中式记谱</div>';
+    renderLastMove(null);
+    return;
+  }
+
+  let html = '';
+  for (let i = 0; i < hist.length; i += 2) {
+    const r = hist[i];
+    const b = hist[i + 1];
+    const isLast = i + 2 >= hist.length;
+    html += `<div class="mv-row${isLast ? ' last' : ''}">`
+      + `<span class="mv-n">${r ? r.n : ''}</span>`
+      + `<span class="mv-r">${esc(r ? r.text : '')}</span>`
+      + `<span class="mv-b">${esc(b ? b.text : '')}</span>`
+      + '</div>';
+  }
+  el.innerHTML = html;
+  el.scrollTop = el.scrollHeight;
+  renderLastMove(hist[hist.length - 1]);
+}
+
+function renderLastMove(mv) {
+  const el = $('lastMove');
+  if (!mv) {
+    el.textContent = '';
+    el.classList.remove('pop');
+    return;
+  }
+  el.textContent = (mv.color === 'r' ? '红 ' : '黑 ') + mv.text;
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
 }
 
 function updateSpecList(st) {

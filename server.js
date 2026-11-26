@@ -230,6 +230,66 @@ function legalMoveMap(b, color) {
 }
 
 /* ------------------------------------------------------------------ */
+/* 中式记谱（炮二平五 / 马8进7）                                       */
+/* ------------------------------------------------------------------ */
+
+const PIECE_NAME = {
+  r: { K: '帅', A: '仕', B: '相', N: '马', R: '车', C: '炮', P: '兵' },
+  b: { K: '将', A: '士', B: '象', N: '马', R: '车', C: '炮', P: '卒' },
+};
+const CN_NUM = ['一', '二', '三', '四', '五', '六', '七', '八', '九'];
+
+/** 纵线编号：红方由右向左一至九，黑方由右向左 1 至 9 */
+function fileOf(color, col) {
+  return color === 'r' ? 9 - col : col + 1;
+}
+
+function numOf(color, n) {
+  return color === 'r' ? CN_NUM[n - 1] || String(n) : String(n);
+}
+
+/** 依据走子前的局面生成专业记谱 */
+function moveNotation(board, from, to) {
+  const [fr, fc] = from;
+  const [tr, tc] = to;
+  const p = board[fr][fc];
+  if (!p) return '';
+  const color = p.c;
+  const name = PIECE_NAME[color][p.t];
+
+  // 同一纵线上有多个同种棋子时，用前/后（或前中后）代替纵线编号
+  const sameFile = [];
+  for (let r = 0; r < 10; r++) {
+    const q = board[r][fc];
+    if (q && q.c === color && q.t === p.t) sameFile.push(r);
+  }
+
+  let head;
+  if (sameFile.length >= 2) {
+    const ordered = sameFile.sort((a, b) => (color === 'r' ? a - b : b - a));
+    const idx = ordered.indexOf(fr);
+    let pos;
+    if (ordered.length === 2) pos = idx === 0 ? '前' : '后';
+    else if (ordered.length === 3) pos = ['前', '中', '后'][idx];
+    else pos = ['前', '二', '三', '四', '后'][idx] || numOf(color, fileOf(color, fc));
+    head = pos + name;
+  } else {
+    head = name + numOf(color, fileOf(color, fc));
+  }
+
+  const isDiagonal = p.t === 'N' || p.t === 'B' || p.t === 'A';
+  const forward = color === 'r' ? tr < fr : tr > fr;
+
+  if (fc === tc) {
+    return head + (forward ? '进' : '退') + numOf(color, Math.abs(tr - fr));
+  }
+  if (isDiagonal) {
+    return head + (forward ? '进' : '退') + numOf(color, fileOf(color, tc));
+  }
+  return head + '平' + numOf(color, fileOf(color, tc));
+}
+
+/* ------------------------------------------------------------------ */
 /* 房间状态                                                            */
 /* ------------------------------------------------------------------ */
 
@@ -363,6 +423,12 @@ function snapshot(room, viewerToken) {
   const specNames = [];
   for (const s of room.spectators.values()) if (isOnline(s)) specNames.push(s.name);
 
+  const histStart = Math.max(0, room.moves.length - 200);
+  const history = [];
+  for (let i = histStart; i < room.moves.length; i++) {
+    history.push({ n: i + 1, color: room.moves[i].piece[0], text: room.moves[i].not || '' });
+  }
+
   return {
     seq: room.seq,
     id: room.id,
@@ -374,6 +440,7 @@ function snapshot(room, viewerToken) {
     check: room.check,
     board: boardJSON(room.board),
     lastMove: room.lastMove,
+    history,
     moveCount: room.moveCount,
     players: {
       r: room.players.r
@@ -431,13 +498,20 @@ function applyMove(room, color, from, to) {
   const legal = legalMovesFrom(room.board, color, fr, fc);
   if (!legal.some(([r, c]) => r === tr && c === tc)) return '这一步不符合棋规';
 
+  const notation = moveNotation(room.board, [fr, fc], [tr, tc]);
   const captured = room.board[tr][tc];
   room.board[tr][tc] = piece;
   room.board[fr][fc] = null;
-  room.moves.push({ from, to, piece: piece.c + piece.t, captured: captured ? captured.c + captured.t : null });
+  room.moves.push({
+    from,
+    to,
+    piece: piece.c + piece.t,
+    captured: captured ? captured.c + captured.t : null,
+    not: notation,
+  });
   if (room.moves.length > MAX_MOVES) room.moves.shift();
   room.moveCount += 1;
-  room.lastMove = { from, to };
+  room.lastMove = { from, to, text: notation };
   room.turn = other(color);
   room.turnStartedAt = Date.now();
 
