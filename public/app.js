@@ -388,25 +388,40 @@ function showJoinOverlay(st) {
 async function joinRoom(seat) {
   if (!S.roomId) return;
   const name = nick();
-  try {
-    const res = await fetch(`/api/rooms/${S.roomId}/join`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, seat, token: S.token }),
-    });
-    const data = await res.json();
-    if (!res.ok || !data.ok) {
-      toast(data.error || '加入失败');
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch(`/api/rooms/${S.roomId}/join`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, seat, token: S.token }),
+      });
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (e) {
+        data = null;
+      }
+      if (!data) {
+        if (attempt === 0) { await sleep(300); continue; }
+        toast('网络异常，请稍后重试');
+        return;
+      }
+      if (!res.ok || !data.ok) {
+        toast(data.error || '加入失败');
+        return;
+      }
+      S.token = data.token;
+      localStorage.setItem(tokenKey(S.roomId), data.token);
+      if (seat === 'spec') S.choseSpec = true;
+      S.joined = true;
+      $('joinOverlay').classList.add('hidden');
+      if (data.state) applyState(data.state);
+      return;
+    } catch (e) {
+      if (attempt === 0) { await sleep(300); continue; }
+      toast('网络异常，请检查网络后重试');
       return;
     }
-    S.token = data.token;
-    localStorage.setItem(tokenKey(S.roomId), data.token);
-    if (seat === 'spec') S.choseSpec = true;
-    S.joined = true;
-    $('joinOverlay').classList.add('hidden');
-    if (data.state) applyState(data.state);
-  } catch (e) {
-    toast('网络异常，请重试');
   }
 }
 
@@ -415,23 +430,37 @@ async function joinRoom(seat) {
  * ============================================================ */
 async function postAction(action, body) {
   if (!S.roomId) return null;
-  try {
-    const res = await fetch(`/api/rooms/${S.roomId}/${action}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(Object.assign({ token: S.token }, body || {})),
-    });
-    const data = await res.json().catch(() => ({ ok: false, error: '网络异常' }));
-    if (!res.ok || !data.ok) {
-      toast(data.error || '操作失败');
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch(`/api/rooms/${S.roomId}/${action}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.assign({ token: S.token }, body || {})),
+      });
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (e) {
+        data = null;
+      }
+      if (!data) {
+        if (attempt === 0) { await sleep(300); continue; }
+        toast('网络异常，请稍后重试');
+        return null;
+      }
+      if (!res.ok || !data.ok) {
+        toast(data.error || '操作失败');
+        return null;
+      }
+      if (data.state) applyState(data.state);
+      return data;
+    } catch (e) {
+      if (attempt === 0) { await sleep(300); continue; }
+      toast('网络异常，请检查网络后重试');
       return null;
     }
-    if (data.state) applyState(data.state);
-    return data;
-  } catch (e) {
-    toast('网络异常，请重试');
-    return null;
   }
+  return null;
 }
 
 async function sendMove(from, to) {

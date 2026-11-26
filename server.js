@@ -14,7 +14,7 @@ const PORT = Number(process.env.PORT || 8000);
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 const MOVE_LIMIT_MS = 90 * 1000;        // 每步思考时间
-const LONGPOLL_MS = 12000;              // 长轮询最长挂起
+const LONGPOLL_MS = 8000;               // 长轮询最长挂起
 const PRESENCE_MS = 25 * 1000;          // 在线判定窗口
 const ROOM_TTL_MS = 3 * 60 * 60 * 1000; // 活跃房间保留
 const MAX_ROOMS = 300;
