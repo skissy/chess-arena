@@ -1,0 +1,36 @@
+/* 五子棋：在象棋样式基础上的补充 */
+
+.brand-seal.five {
+  background: linear-gradient(145deg, #f4f8fd, #b9c6d8);
+  color: #25313f;
+  box-shadow: 0 6px 18px rgba(160, 180, 205, 0.28);
+}
+
+.topbar-right { align-items: center; }
+.topbar-home { display: inline-flex; align-items: center; text-decoration: none; }
+
+.avatar.white {
+  background: linear-gradient(150deg, #ffffff, #c8d2df);
+  color: #25313f;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .8), 0 4px 12px rgba(0, 0, 0, .3);
+}
+
+.btn-black { background: linear-gradient(140deg, #5c6878, #232c38); color: #fff; }
+.btn-white { background: linear-gradient(140deg, #ffffff, #ccd6e2); color: #25313f; }
+
+.gomoku-board-frame {
+  aspect-ratio: 1 / 1;
+  max-width: 640px;
+}
+
+.gomoku-board-frame #boardCanvas { cursor: crosshair; }
+
+.mv-black { color: #a9c8ff; }
+.mv-white { color: #f0dcb4; }
+
+.danmaku-item.w { color: #f4e8ca; }
+.msg.w .who { color: #f0dcb4; }
+
+@media (max-width: 640px) {
+  .gomoku-board-frame { padding: 4px; }
+}

@@ -9,6 +9,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { handleGomokuApi } = require('./gomoku');
 
 const PORT = Number(process.env.PORT || 8000);
 const PUBLIC_DIR = path.join(__dirname, 'public');
@@ -821,6 +822,14 @@ const server = http.createServer((req, res) => {
     if (pathname === '/healthz') {
       res.writeHead(200, { 'Content-Type': 'text/plain' });
       res.end('ok');
+      return;
+    }
+
+    if (pathname.startsWith('/api/gomoku/')) {
+      handleGomokuApi(req, res, pathname, parsed.searchParams).catch((err) => {
+        if (!res.headersSent) json(res, 400, { ok: false, error: err.message || 'bad request' });
+        else res.end();
+      });
       return;
     }
 

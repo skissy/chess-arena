@@ -3,160 +3,107 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>楚河漢界 · 在线象棋擂台</title>
-<meta name="description" content="多人实时中国象棋对战平台，支持双人对弈、旁观观战与弹幕聊天。" />
+<title>弈 · 在线棋室 | 象棋 · 五子棋</title>
+<meta name="description" content="在线棋室：中国象棋与五子棋，双人实时对弈、自由观战与弹幕聊天。" />
 <meta name="theme-color" content="#0b0e14" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23e8c88a'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' font-family='serif' fill='%23b3382c'%3E帥%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23e8c88a'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' font-family='serif' fill='%235a2b12'%3E弈%3C/text%3E%3C/svg%3E" />
 <link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="home.css" />
+<script>
+  // 兼容旧版象棋邀请链接：/#r=xxxxxxxx → /xiangqi.html#r=xxxxxxxx
+  if (/^#r=[a-f0-9]{8}$/.test(location.hash)) {
+    location.replace('/xiangqi.html' + location.hash);
+  }
+</script>
 </head>
 <body>
 <div class="bg-glow"></div>
 
 <header class="topbar">
-  <div class="brand" id="brandHome">
+  <div class="brand">
     <span class="brand-seal">弈</span>
     <div class="brand-text">
-      <strong>楚河漢界</strong>
-      <span>在线象棋擂台</span>
+      <strong>弈 · 在线棋室</strong>
+      <span>两种棋局，一间棋室</span>
     </div>
   </div>
   <div class="topbar-right">
-    <div class="stat"><em id="statRooms">0</em><span>棋室</span></div>
-    <div class="stat"><em id="statLive">0</em><span>对局中</span></div>
+    <div class="stat"><em id="statAll">–</em><span>棋室</span></div>
+    <div class="stat"><em id="statLiveAll">–</em><span>对局中</span></div>
   </div>
 </header>
 
-<!-- ================= 大厅 ================= -->
-<section id="lobby" class="view">
-  <div class="hero">
-    <h1>落子无悔，观者如云</h1>
-    <p>实时双人对弈 · 自由旁观 · 弹幕助威 —— 把棋室的链接发给朋友，即刻开局。</p>
-    <div class="create-box">
-      <input id="nickInput" class="input" maxlength="12" placeholder="你的昵称" autocomplete="nickname" />
-      <input id="roomNameInput" class="input" maxlength="12" placeholder="棋室名（可选）" />
-      <button id="createBtn" class="btn btn-primary">创建棋室 · 执红先手</button>
-    </div>
-  </div>
+<main class="home-view">
+  <section class="home-hero">
+    <h1>今夜，下哪一局？</h1>
+    <p>中国象棋与五子棋，双人实时对弈 · 自由观战 · 弹幕助威。<br />选一种棋，把棋室链接发给朋友，即刻开局。</p>
+  </section>
 
-  <div class="lobby-section">
-    <div class="section-head">
-      <h2>棋室大厅</h2>
-      <button id="refreshBtn" class="btn btn-ghost btn-sm">刷新</button>
-    </div>
-    <div id="roomGrid" class="room-grid">
-      <div class="empty-hint">正在加载棋室…</div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= 棋室 ================= -->
-<section id="roomView" class="view hidden">
-  <div class="room-bar">
-    <button id="backBtn" class="btn btn-ghost btn-sm">← 返回大厅</button>
-    <div class="room-title">
-      <h2 id="roomTitle">棋室</h2>
-      <span id="roomStatus" class="chip">等待中</span>
-      <span id="lastMove" class="last-move"></span>
-    </div>
-    <div id="skinPicker" class="skin-picker"></div>
-    <button id="inviteBtn" class="btn btn-ghost btn-sm">复制邀请链接</button>
-  </div>
-
-  <div class="room-layout">
-    <!-- 左侧：棋手与操作 -->
-    <aside class="panel side-panel">
-      <div class="side-block">
-        <div class="seat" id="seatBlack">
-          <div class="avatar black">將</div>
-          <div class="seat-info">
-            <div class="seat-name">虚位以待</div>
-            <div class="seat-meta">黑方 · 后手</div>
-          </div>
-          <div class="seat-clock" id="clockBlack">1:30</div>
+  <section class="game-grid">
+    <a class="game-card chess" href="/xiangqi.html">
+      <div class="card-seal">帥</div>
+      <div class="card-body">
+        <div class="card-kicker">XIANGQI · 楚河漢界</div>
+        <h2>中国象棋</h2>
+        <p>车马炮相仕帅兵卒，完整的服务端棋规校验与中式记谱。每步 90 秒，观战者可以弹幕助威。</p>
+        <div class="card-meta">
+          <span><em data-rooms="chess">–</em> 间棋室</span>
+          <span><em data-live="chess">–</em> 局进行中</span>
         </div>
-        <div class="divider"><span>VS</span></div>
-        <div class="seat" id="seatRed">
-          <div class="avatar red">帥</div>
-          <div class="seat-info">
-            <div class="seat-name">虚位以待</div>
-            <div class="seat-meta">红方 · 先手</div>
-          </div>
-          <div class="seat-clock" id="clockRed">1:30</div>
+        <span class="card-cta">进入象棋</span>
+      </div>
+    </a>
+
+    <a class="game-card gomoku" href="/gomoku.html">
+      <div class="card-seal five">五</div>
+      <div class="card-body">
+        <div class="card-kicker">GOMOKU · 連珠成五</div>
+        <h2>五子棋</h2>
+        <p>十五路棋盘，黑先白后，率先连成五子者胜。棋室、观战与弹幕一应俱全，随时开一局。</p>
+        <div class="card-meta">
+          <span><em data-rooms="gomoku">–</em> 间棋室</span>
+          <span><em data-live="gomoku">–</em> 局进行中</span>
         </div>
+        <span class="card-cta">进入五子棋</span>
       </div>
+    </a>
+  </section>
 
-      <div class="side-block">
-        <div class="hint" id="turnHint">等待棋手入座…</div>
-        <div class="actions">
-          <button id="resignBtn" class="btn btn-danger btn-sm">认输</button>
-          <button id="rematchBtn" class="btn btn-ghost btn-sm">重新开始</button>
-        </div>
-      </div>
+  <footer class="home-foot">无需注册 · 打开即玩 · 棋局结束后可双方确认重开</footer>
+</main>
 
-      <div class="side-block spectators">
-        <div class="spectator-head">
-          <span>观战区</span>
-          <em id="specCount">0</em>
-        </div>
-        <div id="specList" class="spec-list">还没有人观战</div>
-      </div>
-
-      <div class="side-block move-log-block">
-        <div class="spectator-head">
-          <span>棋谱</span>
-          <em id="moveCount">0</em>
-        </div>
-        <div id="moveLog" class="move-log">
-          <div class="move-empty">开局后此处生成中式记谱</div>
-        </div>
-      </div>
-
-      <div class="side-block my-role">
-        <span class="my-role-label">我的身份</span>
-        <strong id="myRole">观战者</strong>
-      </div>
-    </aside>
-
-    <!-- 中间：棋盘 -->
-    <div class="stage">
-      <div class="board-frame">
-        <canvas id="boardCanvas"></canvas>
-        <div id="danmakuLayer" class="danmaku-layer"></div>
-        <div id="banner" class="banner hidden"></div>
-        <div id="joinOverlay" class="join-overlay hidden">
-          <div class="join-card">
-            <h3>加入棋室</h3>
-            <p id="joinDesc">先到先得，空位可入座</p>
-            <div class="join-actions">
-              <button class="btn btn-red" data-seat="r">执红 <small>先手</small></button>
-              <button class="btn btn-blue" data-seat="b">执黑 <small>后手</small></button>
-              <button class="btn btn-ghost" data-seat="spec">观战</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 右侧：聊天/弹幕 -->
-    <aside class="panel chat-panel">
-      <div class="chat-head">
-        <span>棋室弹幕</span>
-        <label class="switch">
-          <input type="checkbox" id="danmakuToggle" checked />
-          <span>弹幕</span>
-        </label>
-      </div>
-      <div id="chatList" class="chat-list"></div>
-      <form id="chatForm" class="chat-form">
-        <input id="chatInput" class="input" maxlength="60" placeholder="说点什么，会飘在棋盘上…" autocomplete="off" />
-        <button class="btn btn-primary btn-sm" type="submit">发送</button>
-      </form>
-    </aside>
-  </div>
-</section>
-
-<div id="toast" class="toast"></div>
-
-<script src="app.js"></script>
+<script>
+  async function loadStats() {
+    const jobs = [
+      fetch('/api/rooms', { cache: 'no-store' }).then((r) => r.json()).then((d) => {
+        const rooms = d.rooms || [];
+        return { key: 'chess', rooms: rooms.length, live: rooms.filter((x) => x.status === 'playing').length };
+      }),
+      fetch('/api/gomoku/rooms', { cache: 'no-store' }).then((r) => r.json()).then((d) => {
+        const rooms = d.rooms || [];
+        return { key: 'gomoku', rooms: rooms.length, live: rooms.filter((x) => x.status === 'playing').length };
+      }),
+    ];
+    const results = await Promise.allSettled(jobs);
+    let total = 0;
+    let live = 0;
+    let ok = false;
+    for (const r of results) {
+      if (r.status !== 'fulfilled') continue;
+      ok = true;
+      const d = r.value;
+      total += d.rooms;
+      live += d.live;
+      document.querySelectorAll('[data-rooms="' + d.key + '"]').forEach((el) => { el.textContent = d.rooms; });
+      document.querySelectorAll('[data-live="' + d.key + '"]').forEach((el) => { el.textContent = d.live; });
+    }
+    if (ok) {
+      document.getElementById('statAll').textContent = total;
+      document.getElementById('statLiveAll').textContent = live;
+    }
+  }
+  loadStats();
+  setInterval(loadStats, 5000);
+</script>
 </body>
 </html>

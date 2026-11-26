@@ -2,7 +2,7 @@
   "name": "chess-arena",
   "version": "1.0.0",
   "private": true,
-  "description": "楚河汉界 · 多人实时在线象棋：双人对弈、旁观观战与弹幕聊天",
+  "description": "弈 · 在线棋室：多人实时象棋与五子棋，双人对弈、旁观观战与弹幕聊天",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

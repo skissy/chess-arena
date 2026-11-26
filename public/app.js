@@ -391,11 +391,11 @@ function applyState(st) {
 function renderSeats(st) {
   const red = st.players.r;
   const black = st.players.b;
-  paintSeat('seatRed', red, 'r');
-  paintSeat('seatBlack', black, 'b');
+  paintSeat('seatRed', red, 'r', st);
+  paintSeat('seatBlack', black, 'b', st);
 }
 
-function paintSeat(id, p, color) {
+function paintSeat(id, p, color, st) {
   const el = $(id);
   const nameEl = el.querySelector('.seat-name');
   if (p) {
