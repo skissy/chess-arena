@@ -5,8 +5,8 @@
  * ============================================================ */
 
 const CHARS = {
-  rK: '帅', rA: '仕', rB: '相', rN: '马', rR: '车', rC: '炮', rP: '兵',
-  bK: '将', bA: '士', bB: '象', bN: '马', bR: '车', bC: '炮', bP: '卒',
+  rK: '帥', rA: '仕', rB: '相', rN: '馬', rR: '車', rC: '炮', rP: '兵',
+  bK: '將', bA: '士', bB: '象', bN: '馬', bR: '車', bC: '砲', bP: '卒',
 };
 
 const REASON = {
@@ -398,7 +398,7 @@ function renderLastMove(mv) {
     el.classList.remove('pop');
     return;
   }
-  el.textContent = (mv.color === 'r' ? '红 ' : '黑 ') + mv.text;
+  el.textContent = (mv.color === 'r' ? '紅 ' : '黑 ') + mv.text;
   el.classList.remove('pop');
   void el.offsetWidth;
   el.classList.add('pop');
@@ -735,11 +735,11 @@ function drawBoard() {
   // 楚河汉界
   ctx.save();
   ctx.fillStyle = 'rgba(120, 70, 24, 0.42)';
-  ctx.font = `600 ${Math.round(cell * 0.52)}px "Songti SC", "STSong", serif`;
+  ctx.font = `600 ${Math.round(cell * 0.52)}px "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", "Noto Serif CJK TC", serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText('楚  河', px(2), py(4.5));
-  ctx.fillText('汉  界', px(6), py(4.5));
+  ctx.fillText('漢  界', px(6), py(4.5));
   ctx.restore();
 
   // 兵炮位标记
@@ -852,32 +852,64 @@ function drawPiece(r, c, p) {
   const rad = geo.cell * 0.44;
   const isRed = p[0] === 'r';
 
+  // 棋子本体
   ctx.save();
-  ctx.shadowColor = 'rgba(60, 30, 0, 0.35)';
-  ctx.shadowBlur = rad * 0.4;
-  ctx.shadowOffsetY = rad * 0.14;
-
-  const g = ctx.createRadialGradient(x - rad * 0.35, y - rad * 0.42, rad * 0.12, x, y, rad * 1.05);
-  g.addColorStop(0, '#fffdf4');
-  g.addColorStop(0.62, '#f6e8c9');
-  g.addColorStop(1, '#ddc69a');
-  ctx.fillStyle = g;
+  ctx.shadowColor = 'rgba(52, 26, 0, 0.45)';
+  ctx.shadowBlur = rad * 0.5;
+  ctx.shadowOffsetY = rad * 0.16;
+  const body = ctx.createRadialGradient(
+    x - rad * 0.34, y - rad * 0.42, rad * 0.08,
+    x + rad * 0.12, y + rad * 0.18, rad * 1.1
+  );
+  body.addColorStop(0, '#fffef8');
+  body.addColorStop(0.45, '#f9edd4');
+  body.addColorStop(0.78, '#efdcb6');
+  body.addColorStop(1, '#d9c08e');
+  ctx.fillStyle = body;
   ctx.beginPath();
   ctx.arc(x, y, rad, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 
-  ctx.strokeStyle = isRed ? 'rgba(179, 56, 44, 0.45)' : 'rgba(34, 48, 63, 0.42)';
+  // 釉面高光
+  ctx.save();
+  const gloss = ctx.createRadialGradient(
+    x - rad * 0.3, y - rad * 0.46, rad * 0.02,
+    x - rad * 0.3, y - rad * 0.46, rad * 0.92
+  );
+  gloss.addColorStop(0, 'rgba(255, 255, 255, 0.7)');
+  gloss.addColorStop(0.55, 'rgba(255, 255, 255, 0.1)');
+  gloss.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  ctx.fillStyle = gloss;
+  ctx.beginPath();
+  ctx.arc(x, y, rad * 0.98, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // 双圈刻线
+  ctx.strokeStyle = isRed ? 'rgba(154, 42, 32, 0.55)' : 'rgba(28, 42, 58, 0.55)';
   ctx.lineWidth = Math.max(1, rad * 0.07);
   ctx.beginPath();
-  ctx.arc(x, y, rad * 0.84, 0, Math.PI * 2);
+  ctx.arc(x, y, rad * 0.9, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.fillStyle = isRed ? '#b3382c' : '#22303f';
-  ctx.font = `700 ${Math.round(rad * 1.02)}px "Songti SC", "STSong", "SimSun", serif`;
+  ctx.strokeStyle = isRed ? 'rgba(154, 42, 32, 0.3)' : 'rgba(28, 42, 58, 0.28)';
+  ctx.lineWidth = Math.max(0.8, rad * 0.032);
+  ctx.beginPath();
+  ctx.arc(x, y, rad * 0.78, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // 阴刻字：亮边 + 主色
+  const ch = CHARS[p] || '?';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(CHARS[p] || '?', x, y + rad * 0.05);
+  ctx.font = `700 ${Math.round(rad)}px "Kaiti SC", "STKaiti", "KaiTi", "BiauKai", "Songti SC", "Noto Serif CJK TC", serif`;
+
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+  ctx.fillText(ch, x + rad * 0.04, y + rad * 0.085);
+
+  ctx.fillStyle = isRed ? '#a82e22' : '#1b2836';
+  ctx.fillText(ch, x, y + rad * 0.045);
 }
 
 function hitTest(clientX, clientY) {

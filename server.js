@@ -234,8 +234,8 @@ function legalMoveMap(b, color) {
 /* ------------------------------------------------------------------ */
 
 const PIECE_NAME = {
-  r: { K: '帅', A: '仕', B: '相', N: '马', R: '车', C: '炮', P: '兵' },
-  b: { K: '将', A: '士', B: '象', N: '马', R: '车', C: '炮', P: '卒' },
+  r: { K: '帥', A: '仕', B: '相', N: '馬', R: '車', C: '炮', P: '兵' },
+  b: { K: '將', A: '士', B: '象', N: '馬', R: '車', C: '砲', P: '卒' },
 };
 const CN_NUM = ['一', '二', '三', '四', '五', '六', '七', '八', '九'];
 
@@ -269,9 +269,9 @@ function moveNotation(board, from, to) {
     const ordered = sameFile.sort((a, b) => (color === 'r' ? a - b : b - a));
     const idx = ordered.indexOf(fr);
     let pos;
-    if (ordered.length === 2) pos = idx === 0 ? '前' : '后';
-    else if (ordered.length === 3) pos = ['前', '中', '后'][idx];
-    else pos = ['前', '二', '三', '四', '后'][idx] || numOf(color, fileOf(color, fc));
+    if (ordered.length === 2) pos = idx === 0 ? '前' : '後';
+    else if (ordered.length === 3) pos = ['前', '中', '後'][idx];
+    else pos = ['前', '二', '三', '四', '後'][idx] || numOf(color, fileOf(color, fc));
     head = pos + name;
   } else {
     head = name + numOf(color, fileOf(color, fc));
@@ -281,10 +281,10 @@ function moveNotation(board, from, to) {
   const forward = color === 'r' ? tr < fr : tr > fr;
 
   if (fc === tc) {
-    return head + (forward ? '进' : '退') + numOf(color, Math.abs(tr - fr));
+    return head + (forward ? '進' : '退') + numOf(color, Math.abs(tr - fr));
   }
   if (isDiagonal) {
-    return head + (forward ? '进' : '退') + numOf(color, fileOf(color, tc));
+    return head + (forward ? '進' : '退') + numOf(color, fileOf(color, tc));
   }
   return head + '平' + numOf(color, fileOf(color, tc));
 }

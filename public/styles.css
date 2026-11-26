@@ -455,7 +455,7 @@ body {
 }
 .mv-row.last { background: rgba(227, 176, 106, 0.09); }
 .mv-n { color: #55617a; font-size: 11px; text-align: right; font-variant-numeric: tabular-nums; }
-.mv-r, .mv-b { font-family: "Songti SC", "STSong", "SimSun", serif; letter-spacing: .5px; }
+.mv-r, .mv-b { font-family: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", serif; letter-spacing: .5px; }
 .mv-r { color: #ff9d92; }
 .mv-b { color: #a9c8ff; }
 
