@@ -9,6 +9,106 @@ const CHARS = {
   bK: '將', bA: '士', bB: '象', bN: '馬', bR: '車', bC: '砲', bP: '卒',
 };
 
+const SKINS = {
+  wood: {
+    id: 'wood',
+    name: '古木',
+    swatch: 'linear-gradient(140deg,#f4e3c0,#b3382c)',
+    board: {
+      bg: ['#f7e7c5', '#efd9ac', '#e5c994'],
+      grain: 'rgba(122, 74, 28, 0.055)',
+      border: 'rgba(112, 66, 22, 0.85)',
+      border2: 'rgba(112, 66, 22, 0.45)',
+      line: 'rgba(112, 66, 22, 0.72)',
+      river: 'rgba(120, 70, 24, 0.42)',
+      mark: 'rgba(112, 66, 22, 0.5)',
+      accent: 'rgba(46, 134, 222, 0.85)',
+      select: '#e3b06a',
+      dot: 'rgba(60, 120, 90, 0.34)',
+      capture: 'rgba(226, 87, 76, 0.85)',
+      check: '226, 57, 46',
+    },
+    pieces: {
+      r: {
+        body: ['#fffef8', '#f9edd4', '#efdcb6', '#d9c08e'],
+        ring: 'rgba(154, 42, 32, 0.55)', ring2: 'rgba(154, 42, 32, 0.30)',
+        text: '#a82e22', emboss: 'rgba(255, 255, 255, 0.70)', glow: 'rgba(52, 26, 0, 0.45)',
+      },
+      b: {
+        body: ['#fffef8', '#f9edd4', '#efdcb6', '#d9c08e'],
+        ring: 'rgba(28, 42, 58, 0.55)', ring2: 'rgba(28, 42, 58, 0.28)',
+        text: '#1b2836', emboss: 'rgba(255, 255, 255, 0.70)', glow: 'rgba(52, 26, 0, 0.45)',
+      },
+    },
+  },
+  ink: {
+    id: 'ink',
+    name: '墨玉',
+    swatch: 'linear-gradient(140deg,#39434c,#c9a96a)',
+    board: {
+      bg: ['#39424b', '#2b323a', '#1d2329'],
+      grain: 'rgba(255, 255, 255, 0.035)',
+      border: 'rgba(214, 190, 140, 0.62)',
+      border2: 'rgba(214, 190, 140, 0.26)',
+      line: 'rgba(214, 190, 140, 0.42)',
+      river: 'rgba(214, 190, 140, 0.38)',
+      mark: 'rgba(214, 190, 140, 0.35)',
+      accent: 'rgba(227, 176, 106, 0.95)',
+      select: '#f0c987',
+      dot: 'rgba(126, 205, 173, 0.42)',
+      capture: 'rgba(240, 120, 110, 0.9)',
+      check: '240, 110, 100',
+    },
+    pieces: {
+      r: {
+        body: ['#f8ddd3', '#e9ad9e', '#c96b5d', '#9d4a3f'],
+        ring: 'rgba(255, 232, 218, 0.55)', ring2: 'rgba(255, 232, 218, 0.26)',
+        text: '#fff6ec', emboss: 'rgba(70, 12, 6, 0.45)', glow: 'rgba(0, 0, 0, 0.55)',
+      },
+      b: {
+        body: ['#9fb2b8', '#77909a', '#425962', '#2a3a42'],
+        ring: 'rgba(232, 214, 170, 0.5)', ring2: 'rgba(232, 214, 170, 0.22)',
+        text: '#f4e8ca', emboss: 'rgba(0, 0, 0, 0.40)', glow: 'rgba(0, 0, 0, 0.55)',
+      },
+    },
+  },
+  celadon: {
+    id: 'celadon',
+    name: '青瓷',
+    swatch: 'linear-gradient(140deg,#e6f1e8,#3f7f6a)',
+    board: {
+      bg: ['#f0f7f1', '#e4f0e7', '#d5e5da'],
+      grain: 'rgba(60, 96, 82, 0.05)',
+      border: 'rgba(58, 96, 82, 0.7)',
+      border2: 'rgba(58, 96, 82, 0.32)',
+      line: 'rgba(58, 96, 82, 0.52)',
+      river: 'rgba(58, 96, 82, 0.45)',
+      mark: 'rgba(58, 96, 82, 0.45)',
+      accent: 'rgba(190, 118, 58, 0.9)',
+      select: '#3f7f6a',
+      dot: 'rgba(70, 140, 110, 0.34)',
+      capture: 'rgba(200, 86, 72, 0.85)',
+      check: '198, 70, 56',
+    },
+    pieces: {
+      r: {
+        body: ['#ffffff', '#f5faf6', '#e6efe9', '#cfddd5'],
+        ring: 'rgba(170, 60, 45, 0.42)', ring2: 'rgba(170, 60, 45, 0.2)',
+        text: '#b03a2b', emboss: 'rgba(255, 255, 255, 0.85)', glow: 'rgba(40, 80, 65, 0.3)',
+      },
+      b: {
+        body: ['#ffffff', '#f5faf6', '#e6efe9', '#cfddd5'],
+        ring: 'rgba(58, 96, 82, 0.45)', ring2: 'rgba(58, 96, 82, 0.22)',
+        text: '#274b45', emboss: 'rgba(255, 255, 255, 0.85)', glow: 'rgba(40, 80, 65, 0.3)',
+      },
+    },
+  },
+};
+
+function skin() {
+  return SKINS[S.skin] || SKINS.wood;
+}
+
 const REASON = {
   checkmate: '将死',
   stalemate: '困毙',
@@ -37,6 +137,7 @@ const S = {
   polling: false,
   choseSpec: false,
   danmakuOn: true,
+  skin: localStorage.getItem('chess.skin') || 'wood',
   recvAt: 0,
   failures: 0,
   joined: false,
@@ -191,6 +292,7 @@ function enterRoom(roomId) {
   $('chatList').innerHTML = '';
   $('joinOverlay').classList.add('hidden');
   $('banner').classList.add('hidden');
+  applySkin();
 
   pollLoop(roomId);
 
@@ -670,20 +772,21 @@ function drawBoard() {
   const { w, h, cell } = geo;
   if (!w || !h || !cell) return;
   ctx.clearRect(0, 0, w, h);
+  const pal = skin().board;
 
   // 棋盘底色
   const bg = ctx.createLinearGradient(0, 0, w * 0.6, h);
-  bg.addColorStop(0, '#f7e7c5');
-  bg.addColorStop(0.5, '#efd9ac');
-  bg.addColorStop(1, '#e5c994');
+  bg.addColorStop(0, pal.bg[0]);
+  bg.addColorStop(0.5, pal.bg[1]);
+  bg.addColorStop(1, pal.bg[2]);
   roundRect(0, 0, w, h, 16);
   ctx.fillStyle = bg;
   ctx.fill();
 
   // 木纹
   ctx.save();
-  ctx.globalAlpha = 0.055;
-  ctx.strokeStyle = '#7a4a1c';
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = pal.grain;
   ctx.lineWidth = 1;
   for (let i = 0; i < 22; i++) {
     const y = (i / 22) * h + ((i * 37) % 13);
@@ -696,15 +799,15 @@ function drawBoard() {
 
   // 外框
   const m = cell * 0.6;
-  ctx.strokeStyle = 'rgba(112, 66, 22, 0.85)';
+  ctx.strokeStyle = pal.border;
   ctx.lineWidth = Math.max(2, cell * 0.045);
   ctx.strokeRect(geo.ox - m, geo.oy - m, cell * 8 + m * 2, cell * 9 + m * 2);
-  ctx.strokeStyle = 'rgba(112, 66, 22, 0.45)';
+  ctx.strokeStyle = pal.border2;
   ctx.lineWidth = Math.max(1, cell * 0.02);
   ctx.strokeRect(geo.ox - m * 0.62, geo.oy - m * 0.62, cell * 8 + m * 1.24, cell * 9 + m * 1.24);
 
   // 格线
-  ctx.strokeStyle = 'rgba(112, 66, 22, 0.72)';
+  ctx.strokeStyle = pal.line;
   ctx.lineWidth = Math.max(1, cell * 0.018);
   ctx.beginPath();
   for (let r = 0; r < 10; r++) {
@@ -734,7 +837,7 @@ function drawBoard() {
 
   // 楚河汉界
   ctx.save();
-  ctx.fillStyle = 'rgba(120, 70, 24, 0.42)';
+  ctx.fillStyle = pal.river;
   ctx.font = `600 ${Math.round(cell * 0.52)}px "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", "Noto Serif CJK TC", serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -745,7 +848,7 @@ function drawBoard() {
   // 兵炮位标记
   const marks = [[1, 2], [7, 2], [1, 7], [7, 7]];
   ctx.save();
-  ctx.strokeStyle = 'rgba(112, 66, 22, 0.5)';
+  ctx.strokeStyle = pal.mark;
   ctx.lineWidth = Math.max(1, cell * 0.016);
   for (const [c, r] of marks) {
     const x = px(c);
@@ -767,7 +870,7 @@ function drawBoard() {
   // 上一步标记
   if (st.lastMove) {
     ctx.save();
-    ctx.strokeStyle = 'rgba(46, 134, 222, 0.75)';
+    ctx.strokeStyle = pal.accent;
     ctx.lineWidth = Math.max(1.5, cell * 0.03);
     for (const [r, c] of [st.lastMove.from, st.lastMove.to]) {
       const x = px(c);
@@ -802,12 +905,12 @@ function drawBoard() {
       const occupied = !!st.board[r][c];
       ctx.beginPath();
       if (occupied) {
-        ctx.strokeStyle = 'rgba(226, 87, 76, 0.85)';
+        ctx.strokeStyle = pal.capture;
         ctx.lineWidth = Math.max(2, cell * 0.045);
         ctx.arc(x, y, cell * 0.46, 0, Math.PI * 2);
         ctx.stroke();
       } else {
-        ctx.fillStyle = 'rgba(60, 120, 90, 0.34)';
+        ctx.fillStyle = pal.dot;
         ctx.arc(x, y, cell * 0.14, 0, Math.PI * 2);
         ctx.fill();
       }
@@ -815,7 +918,7 @@ function drawBoard() {
     // 选中环
     const x = px(S.sel[1]);
     const y = py(S.sel[0]);
-    ctx.strokeStyle = '#e3b06a';
+    ctx.strokeStyle = pal.select;
     ctx.lineWidth = Math.max(2, cell * 0.05);
     ctx.beginPath();
     ctx.arc(x, y, cell * 0.47, 0, Math.PI * 2);
@@ -833,7 +936,7 @@ function drawBoard() {
           const y = py(r);
           const pulse = 0.5 + 0.5 * Math.sin(Date.now() / 220);
           ctx.save();
-          ctx.strokeStyle = `rgba(226, 57, 46, ${0.45 + 0.4 * pulse})`;
+          ctx.strokeStyle = `rgba(${pal.check}, ${0.45 + 0.4 * pulse})`;
           ctx.lineWidth = Math.max(2, cell * 0.06);
           ctx.beginPath();
           ctx.arc(x, y, cell * (0.5 + 0.05 * pulse), 0, Math.PI * 2);
@@ -850,21 +953,21 @@ function drawPiece(r, c, p) {
   const x = px(c);
   const y = py(r);
   const rad = geo.cell * 0.44;
-  const isRed = p[0] === 'r';
+  const sk = skin().pieces[p[0]];
 
   // 棋子本体
   ctx.save();
-  ctx.shadowColor = 'rgba(52, 26, 0, 0.45)';
+  ctx.shadowColor = sk.glow;
   ctx.shadowBlur = rad * 0.5;
   ctx.shadowOffsetY = rad * 0.16;
   const body = ctx.createRadialGradient(
     x - rad * 0.34, y - rad * 0.42, rad * 0.08,
     x + rad * 0.12, y + rad * 0.18, rad * 1.1
   );
-  body.addColorStop(0, '#fffef8');
-  body.addColorStop(0.45, '#f9edd4');
-  body.addColorStop(0.78, '#efdcb6');
-  body.addColorStop(1, '#d9c08e');
+  body.addColorStop(0, sk.body[0]);
+  body.addColorStop(0.45, sk.body[1]);
+  body.addColorStop(0.78, sk.body[2]);
+  body.addColorStop(1, sk.body[3]);
   ctx.fillStyle = body;
   ctx.beginPath();
   ctx.arc(x, y, rad, 0, Math.PI * 2);
@@ -887,13 +990,13 @@ function drawPiece(r, c, p) {
   ctx.restore();
 
   // 双圈刻线
-  ctx.strokeStyle = isRed ? 'rgba(154, 42, 32, 0.55)' : 'rgba(28, 42, 58, 0.55)';
+  ctx.strokeStyle = sk.ring;
   ctx.lineWidth = Math.max(1, rad * 0.07);
   ctx.beginPath();
   ctx.arc(x, y, rad * 0.9, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.strokeStyle = isRed ? 'rgba(154, 42, 32, 0.3)' : 'rgba(28, 42, 58, 0.28)';
+  ctx.strokeStyle = sk.ring2;
   ctx.lineWidth = Math.max(0.8, rad * 0.032);
   ctx.beginPath();
   ctx.arc(x, y, rad * 0.78, 0, Math.PI * 2);
@@ -905,10 +1008,10 @@ function drawPiece(r, c, p) {
   ctx.textBaseline = 'middle';
   ctx.font = `700 ${Math.round(rad)}px "Kaiti SC", "STKaiti", "KaiTi", "BiauKai", "Songti SC", "Noto Serif CJK TC", serif`;
 
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+  ctx.fillStyle = sk.emboss;
   ctx.fillText(ch, x + rad * 0.04, y + rad * 0.085);
 
-  ctx.fillStyle = isRed ? '#a82e22' : '#1b2836';
+  ctx.fillStyle = sk.text;
   ctx.fillText(ch, x, y + rad * 0.045);
 }
 
@@ -964,6 +1067,45 @@ canvas.addEventListener('click', (e) => {
 /* ============================================================
  * 事件绑定与启动
  * ============================================================ */
+function setSkin(id) {
+  if (!SKINS[id]) return;
+  S.skin = id;
+  localStorage.setItem('chess.skin', id);
+  applySkin();
+}
+
+function applySkin() {
+  const frame = document.querySelector('.board-frame');
+  if (frame) frame.dataset.skin = S.skin;
+  const picker = $('skinPicker');
+  if (picker) {
+    picker.querySelectorAll('.skin-btn').forEach((b) => {
+      b.classList.toggle('active', b.dataset.skin === S.skin);
+    });
+  }
+  drawBoard();
+}
+
+function renderSkinPicker() {
+  const el = $('skinPicker');
+  if (!el) return;
+  el.innerHTML = '';
+  Object.keys(SKINS).forEach((key) => {
+    const s = SKINS[key];
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'skin-btn' + (S.skin === key ? ' active' : '');
+    btn.dataset.skin = key;
+    btn.title = s.name + '皮肤';
+    const dot = document.createElement('i');
+    dot.style.background = s.swatch;
+    btn.appendChild(dot);
+    btn.appendChild(document.createTextNode(s.name));
+    btn.addEventListener('click', () => setSkin(key));
+    el.appendChild(btn);
+  });
+}
+
 function bind() {
   $('nickInput').value = nick();
   $('createBtn').addEventListener('click', createRoom);
@@ -1023,6 +1165,8 @@ function bind() {
 
 function start() {
   bind();
+  renderSkinPicker();
+  applySkin();
   const m = location.hash.match(/^#r=([a-f0-9]{8})$/);
   if (m) enterRoom(m[1]);
   else loadRooms();

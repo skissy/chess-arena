@@ -305,6 +305,43 @@ body {
   100% { transform: scale(1); opacity: 1; }
 }
 
+/* 皮肤选择 */
+.skin-picker { display: flex; align-items: center; gap: 6px; }
+.skin-btn {
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: border-color .15s, background .15s, color .15s;
+}
+.skin-btn i {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: block;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .4);
+}
+.skin-btn:hover { background: rgba(255, 255, 255, .05); color: var(--text); }
+.skin-btn.active { border-color: rgba(227, 176, 106, .5); background: rgba(227, 176, 106, .12); color: var(--text); }
+
+.board-frame[data-skin="ink"] {
+  background: linear-gradient(160deg, rgba(72, 82, 94, 0.35), rgba(18, 22, 27, 0.55));
+  border-color: rgba(214, 190, 140, 0.22);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.board-frame[data-skin="celadon"] {
+  background: linear-gradient(160deg, rgba(226, 242, 232, 0.16), rgba(200, 226, 210, 0.05));
+  border-color: rgba(58, 96, 82, 0.32);
+  box-shadow: 0 30px 70px rgba(20, 50, 40, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
 .room-layout {
   display: grid;
   grid-template-columns: 250px minmax(0, 1fr) 330px;
